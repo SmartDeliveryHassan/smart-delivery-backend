@@ -1,29 +1,18 @@
-const express = require('express');
 const { Pool } = require('pg');
-require('dotenv').config();
+require('dotenv').config(); // to load the variables from the .env file
 
-const app = express();
-const port = process.env.PORT || 5000;
-
-// Set up PostgreSQL client
 const pool = new Pool({
   user: process.env.PGUSER,
   host: process.env.PGHOST,
   database: process.env.PGDATABASE,
   password: process.env.PGPASSWORD,
-  port: process.env.PGPORT,
+  port: process.env.PGPORT, // default PostgreSQL port is 5432
 });
 
-// Basic route to check connection
-app.get('/', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW()');
-    res.send(`Connected to PostgreSQL! Current time: ${result.rows[0].now}`);
-  } catch (err) {
-    res.status(500).send('Error connecting to database');
+pool.connect((err) => {
+  if (err) {
+    console.error('Error connecting to database:', err);
+  } else {
+    console.log('Connected to PostgreSQL');
   }
-});
-
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
 });
