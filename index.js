@@ -1,12 +1,11 @@
 const { Pool } = require('pg');
-require('dotenv').config(); // to load the variables from the .env file
+require('dotenv').config(); // Load environment variables from .env file
 
 const pool = new Pool({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT, // default PostgreSQL port is 5432
+  connectionString: process.env.DATABASE_URL, // Use DATABASE_URL if defined
+  ssl: {
+    rejectUnauthorized: false,  // Enable SSL if required by Railway
+  },
 });
 
 pool.connect((err) => {
